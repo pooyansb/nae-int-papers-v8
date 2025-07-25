@@ -82,7 +82,7 @@ def extract_key_terms_and_clarify(query, diagnostic_tasks):
                     "Clinical Field: error_extracting\n"
                     "Key Terms: error_extracting\n"
                     "Clarified Query: error_extracting\n"
-                    "Diagnostic Task: error_extracting”
+                    "Diagnostic Task: error_extracting"
                 )},
             {"role": "system", "content": f"Original user query: {query}"},
             {"role": "user", "content": clarification_prompt}
