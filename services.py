@@ -98,6 +98,9 @@ def extract_key_terms_and_clarify(query, diagnostic_tasks):
     clinical_field = re.search(r"Clinical Field:\s*(.+)", response_content)
     key_terms = re.search(r"Key Terms:\s*(.+)", response_content)
     clarified_query = re.search(r"Clarified Query:\s*(.+)", response_content)
+    diagnostic_task_match = re.search(r"Diagnostic Task:\s*(.+)", response_content)
+    diagnostic_task = diagnostic_task_match.group(1).strip() if diagnostic_task_match else None  # or "Other"
+
 
     # Assign extracted values, removing any surrounding whitespace
     clinical_field = clinical_field.group(1).strip() if clinical_field else "error_extracting_clinical_field"
