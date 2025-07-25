@@ -17,7 +17,7 @@ search_bp = Blueprint("search", __name__, url_prefix="/search")
 # 1) Load your CT study metadata
 data = pd.read_csv(Config.DATA_CSV, encoding="ISO-8859-1")
 
-# search.py, near top (after loading 'data')
+# Extract diagnostic tasks for canonical GPT mapping
 diagnostic_tasks = (
     data["Daignostic task"].dropna()
     .astype(str)
@@ -77,29 +77,25 @@ def search():
 
     # ── Shortcut: direct DOI input ──────────────────────────────────
     if original_query.startswith("https://doi.org/"):
-        clinical_field, key_terms, clarified_query = "bypass", "doi", original_query
+        clinical_field, key_terms, clarified_query, diagnostic_task = "bypass", "doi", original_query, None
     else:
-        # 3) GPT‐based extraction + clarification
-        clinical_field, key_terms, clarified_query = extract_key_terms_and_clarify(original_query)
+        # 3) GPT‐based extraction + clarification with canonical diagnostic task
+        clinical_field, key_terms, clarified_query, diagnostic_task = extract_key_terms_and_clarify(original_query, diagnostic_tasks)
         clarified_query = clarified_query.strip().lstrip("*").strip()
 
         # 4) Off‑topic / irrelevance check *with local rescue*
-        #    If GPT says “Other” *and* we found *no* CT term locally, flag irrelevant.
         found_local = (
             any(term in lower_q for term in CT_TERMS)
-            or any(term in key_terms.lower() for term in CT_TERMS)
-            or any(term in clarified_query.lower() for term in CT_TERMS)
+            or any(term in (key_terms or "").lower() for term in CT_TERMS)
+            or any(term in (clarified_query or "").lower() for term in CT_TERMS)
         )
 
-        # Override clarified_query for rescued CT terms
-        if found_local:
-            clarified_query = original_query
-
+        # If any field is 'error_extracting' (including Diagnostic Task), always show irrelevant page and do NOT run search
         if (
-            clinical_field.lower() == "other" and not found_local
-            or "error_extracting" in clinical_field.lower()
-            or "error_extracting" in key_terms.lower()
-            or "error_extracting" in clarified_query.lower()
+            "error_extracting" in (clinical_field or "").lower()
+            or "error_extracting" in (key_terms or "").lower()
+            or "error_extracting" in (clarified_query or "").lower()
+            or "error_extracting" in (diagnostic_task or "").lower()
             or clarified_query.lower().startswith("could you provide more information")
         ):
             return render_template(
@@ -109,7 +105,37 @@ def search():
                 active_tab="home"
             )
 
-    # ── 5) Pull top‐3 PCCT studies from your pool ───────────────────
+        # Canonical Diagnostic Task match: return those studies directly
+        if diagnostic_task and diagnostic_task != "Other":
+            mask_task = data["Daignostic task"].astype(str).str.strip().str.lower() == diagnostic_task.lower()
+            subset = data[mask_task]
+            if not subset.empty:
+                icon_url = url_for("static", filename="link-16.png")
+                refs_html = ""
+                for i, (_, row) in enumerate(subset.iterrows()):
+                    citation = row["Citation"]
+                    doi = row["DOI Link"]
+                    refs_html += (
+                        f"{i+1}. {citation} "
+                        f"<a href='{doi}' target='_blank'>"
+                        f"<img src='{icon_url}' style='width:16px;vertical-align:middle'></a><br>"
+                    )
+                return render_template(
+                    "search.html",
+                    no_dois=False, irrelevant=False,
+                    no_results=False,
+                    sankey_refs=Markup(refs_html),
+                    clarified_query=original_query,
+                    response=None, protocol=None, formatted_refs=None,
+                    active_tab="home"
+                )
+            # If no studies for this task, proceed to fallback below
+
+        # Fallback to semantic search if "Other" or no match
+        if found_local:
+            clarified_query = original_query
+
+    # ── 5) Pull top‐3 PCCT studies from your pool (semantic search fallback) ──
     docs, found, _ = retrieve_relevant_documents(clarified_query)
     docs = docs[:3]
 
