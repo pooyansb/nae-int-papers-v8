@@ -59,13 +59,16 @@ def embed_text(text):
     normalized_embeddings = embeddings / np.linalg.norm(embeddings, axis=1, keepdims=True)
     return normalized_embeddings
 
-def extract_key_terms_and_clarify(query):
+def extract_key_terms_and_clarify(query, diagnostic_tasks):
     """Use GPT to directly extract key terms and clarify the query in a structured format."""
+    task_list = '\n'.join(f'- {t}' for t in diagnostic_tasks)
     clarification_prompt = f"""
     Given the query: '{query}', please structure your response as follows:
     Clinical Field: <Identify the clinical field of the query, such as cardiac, chest, neuro, msk, abdomen, oncology, or other.>
     Key Terms: <List key terms here that exactly match the terms in the query which are related to medical imaging or cpmputed tomography or radiology  without additional words.>
     Clarified Query: <Rephrase the query into a direct question written in a professional and scientific manner, as if a radiologist or medical physicist is asking it.>
+    Diagnostic Task: <Select the single most appropriate diagnostic task from the following list, using the exact label. If none fits, respond exactly as: Other.>
+    {task_list}
     """
 
     response = client.chat.completions.create(
@@ -78,7 +81,8 @@ def extract_key_terms_and_clarify(query):
                     "If the input is irrelevant, offensive, nonsensical, or inappropriate, respond exactly as:\n\n"
                     "Clinical Field: error_extracting\n"
                     "Key Terms: error_extracting\n"
-                    "Clarified Query: error_extracting"
+                    "Clarified Query: error_extracting\n"
+                    "Diagnostic Task: error_extracting”
                 )},
             {"role": "system", "content": f"Original user query: {query}"},
             {"role": "user", "content": clarification_prompt}
