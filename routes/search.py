@@ -17,6 +17,15 @@ search_bp = Blueprint("search", __name__, url_prefix="/search")
 # 1) Load your CT study metadata
 data = pd.read_csv(Config.DATA_CSV, encoding="ISO-8859-1")
 
+# search.py, near top (after loading 'data')
+diagnostic_tasks = (
+    data["Daignostic task"].dropna()
+    .astype(str)
+    .str.strip()
+    .unique()
+    .tolist()
+)
+
 # 2) Load your CT keyword list once
 with open(Config.KEY_TERMS_FILE, "r") as f:
     terms_dict = json.load(f)
