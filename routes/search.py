@@ -107,7 +107,7 @@ def search():
 
         # Canonical Diagnostic Task match: return those studies directly
         if diagnostic_task and diagnostic_task != "Other":
-            mask_task = data["Daignostic task"].astype(str).str.strip().str.lower() == diagnostic_task.lower()
+            mask_task = data["Daignostic Task"].astype(str).str.strip().str.lower() == diagnostic_task.lower()
             subset = data[mask_task]
             if not subset.empty:
                 icon_url = url_for("static", filename="link-16.png")
