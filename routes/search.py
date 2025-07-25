@@ -19,7 +19,7 @@ data = pd.read_csv(Config.DATA_CSV, encoding="ISO-8859-1")
 
 # Extract diagnostic tasks for canonical GPT mapping
 diagnostic_tasks = (
-    data["Daignostic Task"].dropna()
+    data["Diagnostic Task"].dropna()
     .astype(str)
     .str.strip()
     .unique()
