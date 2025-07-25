@@ -106,7 +106,7 @@ def extract_key_terms_and_clarify(query, diagnostic_tasks):
 
     # Ensure clinical field formatting matches dataset representation
     clinical_field = clinical_field.capitalize()  # Normalize for dataset consistency
-    return clinical_field, key_terms, clarified_query
+    return clinical_field, key_terms, clarified_query, diagnostic_task
 
 TOP_K = 50  # You can set this to whatever number you prefer for the top results
 
