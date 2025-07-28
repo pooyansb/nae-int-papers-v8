@@ -47,9 +47,12 @@
   /* Mobile portrait */
   @media (max-width: 800px) and (orientation: portrait) {
     .plot-scroll-container {
-      align-items: flex-start;
-      overflow-y: auto;
+      width: 100vw;
       height: 100vh;
+      overflow-x: auto;
+      overflow-y: auto;
+      align-items: center;
+      justify-content: center;
     }
     #plot {
       width: 1000px;
