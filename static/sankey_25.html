@@ -67,15 +67,15 @@
   @media (max-width: 800px) and (orientation: landscape) {
     .plot-scroll-container {
       width: 100vw;
-      height: 100vh;
+      height: auto;
       overflow-x: auto;
       overflow-y: auto;
-      align-items: center;
-      justify-content: center;
+      align-items:flex-start;
+      justify-content: flex-start;
     }
     #plot {
-      width: 1000px;  /* adjust if you want a wider view */
-      height: 450px;;
+      width: 1200px;  /* adjust if you want a wider view */
+      height: auto;;
     }
     /* Optional: reduce text size slightly for visibility */
     #plot .plotly-graph-div text {
