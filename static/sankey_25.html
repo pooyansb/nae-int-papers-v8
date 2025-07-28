@@ -5,46 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <!-- Load Plotly from CDN -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      width: 100vw;
-      box-sizing: border-box;
-      background: #fff !important; /* Always white background */
-      overflow-y: auto;
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    background: #fff !important;
+    overflow-y: auto;
+  }
+
+  .plot-scroll-container {
+    width: 100vw;
+    height: 100vh;
+    background: #fff;
+    overflow-x: auto;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #plot {
+    min-width: 700px;
+    width: 1540px;
+    height: 720px;
+    background: #fff;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* Tablet and small desktop */
+  @media (max-width: 1200px) {
+    #plot {
+      width: 900px;
+      height: 540px;
     }
+  }
+
+  /* Mobile portrait */
+  @media (max-width: 800px) and (orientation: portrait) {
+    .plot-scroll-container {
+      align-items: flex-start;
+      overflow-y: auto;
+      height: 100vh;
+    }
+    #plot {
+      width: 1000px;
+      height: 450px;
+    }
+  }
+
+  /* Mobile landscape */
+  @media (max-width: 800px) and (orientation: landscape) {
     .plot-scroll-container {
       width: 100vw;
       height: 100vh;
-      background: #fff;
       overflow-x: auto;
-      overflow-y: auto;
-      display: flex;
+      overflow-y: hidden;
       align-items: center;
       justify-content: center;
     }
     #plot {
-      min-width: 700px;
-      width: 1540px;
-      height: 720px;
-      background: #fff;
-      margin: 0 auto;
-      display: block;
+      width: 1200px;  /* adjust if you want a wider view */
+      height: auto;
     }
-    @media (max-width: 1200px) {
-      #plot { width: 900px; height: 540px; }
+    /* Optional: reduce text size slightly for visibility */
+    #plot .plotly-graph-div text {
+      font-size: 11px !important;
     }
-    @media (max-width: 800px) {
-      .plot-scroll-container {
-        align-items: flex-start;
-        overflow-y: auto;    /* <--- Add this! */
-        height: 100vh;
-      }
-    #plot { width: 1000px; height: 450px; }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
   <div class="plot-scroll-container">
