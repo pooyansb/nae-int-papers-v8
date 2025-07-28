@@ -55,6 +55,9 @@
       width: 1000px;
       height: 450px;
     }
+    #plot .plotly-graph-div text {
+      font-size: 10px !important;
+    }
   }
 
   /* Mobile landscape */
@@ -63,17 +66,17 @@
       width: 100vw;
       height: 100vh;
       overflow-x: auto;
-      overflow-y: hidden;
+      overflow-y: auto;
       align-items: center;
       justify-content: center;
     }
     #plot {
-      width: 1200px;  /* adjust if you want a wider view */
-      height: auto;
+      width: 1000px;  /* adjust if you want a wider view */
+      height: 450px;;
     }
     /* Optional: reduce text size slightly for visibility */
     #plot .plotly-graph-div text {
-      font-size: 11px !important;
+      font-size: 10px !important;
     }
   }
 </style>
