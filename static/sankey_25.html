@@ -91,10 +91,21 @@
     function getResponsiveLayout() {
       const w = window.innerWidth;
       const h = window.innerHeight;
-      if (w < 800) {
+        const isLandscape = w > h;
+      if (w < 800 && isLandscape) {
+        // Mobile landscape
+        return {
+          font: { color: "black", size: 10, family: "Calibri" },
+          margin: { t: 10, l: 12, r: 12, b: 10 },
+          width: 1200,
+          height: 480,
+          paper_bgcolor: "#fff",
+          plot_bgcolor: "#fff"
+        };
+      } else if (w < 800) {
         // Mobile portrait
         return {
-          font: { color: "black", size: 11, family: "Calibri" },
+          font: { color: "black", size: 10, family: "Calibri" },
           margin: { t: 10, l: 18, r: 12, b: 10 },
           width: 1000,
           height: 450,
