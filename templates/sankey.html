@@ -43,7 +43,7 @@
     {% include '_navbar.html' %}
 
     <iframe id="sankey-frame"
-            src="{{ url_for('static', filename='sankey_22.html') }}"></iframe>
+            src="{{ url_for('static', filename='sankey_25.html') }}"></iframe>
     <div id="sankey-results" class="mt-3"></div>
   </div>
 
@@ -53,8 +53,8 @@
       const plot = frame.contentWindow.document.getElementById('plot');
       if (!plot) return;
       plot.on('plotly_click', evt => {
-        let dois = evt.points[0].customdata;
-        if (!Array.isArray(dois)) dois = [dois];
+        let custom = evt.points[0].customdata;
+        let dois = (Array.isArray(custom) && Array.isArray(custom[1])) ? custom[1] : [];
         const validDois = dois.filter(d => typeof d === 'string' && d.startsWith('http'));
         if (validDois.length === 0) {
           alert('No DOI found for this link.');
