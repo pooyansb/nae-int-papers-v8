@@ -136,7 +136,7 @@ def search():
             clarified_query = original_query
 
     # ── 5) Pull top‐3 PCCT studies from your pool (semantic search fallback) ──
-    docs, found, _ = retrieve_relevant_documents(clarified_query)
+    docs, found, _ = retrieve_relevant_documents(clarified_query, diagnostic_tasks)
     docs = docs[:3]
 
     # ── 6) CT‑related but zero matches → “no_results” ───────────────
