@@ -120,7 +120,7 @@ from collections import Counter
 import unicodedata
 import logging
 
-def retrieve_relevant_documents(query, top_k=50, similarity_threshold=0.85, max_results=3):
+def retrieve_relevant_documents(query, diagnostic_tasks, top_k=50, similarity_threshold=0.85, max_results=3):
     """
     Retrieve the most relevant documents for a given query.
     1) Try direct matches on Title, DOI, Author, or Diagnostic Task.
@@ -165,7 +165,7 @@ def retrieve_relevant_documents(query, top_k=50, similarity_threshold=0.85, max_
 
     # --- STEP 2: fallback to GPT + FAISS ---
     logging.info("[STEP 1] No Title/DOI/Author/Task match → GPT/FAISS fallback")
-    clinical_field, key_terms, clarified_query = extract_key_terms_and_clarify(query)
+    clinical_field, key_terms, clarified_query, diagnostic_task = extract_key_terms_and_clarify(query, diagnostic_tasks)
     q_emb = embed_text(clarified_query)
     D, I = index.search(q_emb, top_k)
 
